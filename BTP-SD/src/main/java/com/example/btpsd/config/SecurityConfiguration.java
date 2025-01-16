@@ -1,0 +1,90 @@
+package com.example.btpsd.config;
+import com.sap.cloud.security.spring.config.IdentityServicesPropertySourceFactory;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
+import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.core.convert.converter.Converter;
+import org.springframework.security.authentication.AbstractAuthenticationToken;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.bind.annotation.CrossOrigin;
+
+import java.util.Collection;
+import java.util.stream.Collectors;
+
+@Configuration
+@EnableMethodSecurity(securedEnabled = true, jsr250Enabled = true)
+@PropertySource(factory = IdentityServicesPropertySourceFactory.class, ignoreResourceNotFound = true, value = { "" })
+@EnableWebSecurity
+@CrossOrigin(origins = "*", allowedHeaders = "*",maxAge = 3600L)
+public class SecurityConfiguration {
+
+//    @Bean
+//    public Converter<Jwt, AbstractAuthenticationToken> authConverter() {
+//        return jwt -> {
+//            Collection<GrantedAuthority> authorities = jwt.getClaimAsStringList("groups").stream()
+//                    .map(group -> new SimpleGrantedAuthority("ROLE_" + group.toUpperCase()))
+//                    .collect(Collectors.toList());
+//            return new JwtAuthenticationToken(jwt, authorities);
+//        };
+//    }
+    
+//    @Bean
+//    public WebSecurityCustomizer webSecurityCustomizer() {
+//        return (web) -> web.ignoring().requestMatchers("/iasusers");
+//        return (web) -> web.ignoring().requestMatchers("/iasusers", "/formulas/*", "/formulas", "/linetypes/*", "/linetypes", "/materialgroups/*", "/materialgroups", "/modelspecs", "/modelspecs/*",
+//                "/modelspecdetails/*", "/modelspecdetails", "/personnelnumbers/*", "/personnelnumbers", "/servicenumbers/*", "/servicenumbers", "/servicetypes/*", "/servicetypes",
+//                "/invoices/*", "/invoices", "/mainitems/*/*/*/*/*", "/mainitems/*/*", "/mainitems","/mainitems/*", "/subitems/*", "/subitems", "/currencies/*", "/currencies", "/salesorder", "/salesorder/*", "/salesorderitems", "/salesorderitems/*," ,
+//                "/salesorderpricing", "/salesorderpricing/*", "/executionordersub", "/executionordersub/*", "/executionordermain/*/*", "/executionordermain/*/*/*", "/executionordermain", "/executionordermain/*","/salesordercloud", "/salesordercloud/*",
+//                "/salesorderpostcloud", "/salesorderpostcloud/*", "/serviceinvoice/*/*/*/*/*", "/serviceinvoice/*/*", "/serviceinvoice", "/serviceinvoice/*", "/salesorderitemcloud/*", "/salesorderitemcloud",
+//                "/salesorderitemscloud/*", "/salesorderitemscloud", "/salesorderpricingcloud/*/*", "/salesorderpricingcloud", "/salesquotationcloud", "/salesquotationcloud/*",
+//                "/salesquotationpostcloud/*", "/salesquotationpostcloud", "/salesquotationitemcloud/*", "/salesquotationitemcloud", "/salesquotationitemscloud", "/salesquotationitemscloud/*",
+//                "/salesquotationpricingcloud/*/*", "/salesquotationpricingcloud", "/debitmemocloud/*" , "/debitmemocloud", "/debitmemopostcloud/*", "/debitmemopostcloud",
+//                "/debitmemoitemscloud", "/debitmemoitemscloud/*","/salesorderallpricingcloud", "/salesorderallpricingcloud/*", "/salesorderitempricingcloudpost/*/*",
+//                "/salesquotationricingcloudpatch/*/*/*/*", "/productcloud", "/productdescriptioncloud", "/businesspartner", "/salesquotationitem/*/*",
+//                "/salesorderitem/*/*", "/debitmemoitems/*/*", "/allproductscloud", "/quantities", "/total", "/totalheader", "/totalsrv", "/totalheadersrv",
+//                "/fetchSalesOrderDetails", "/measurements", "/measurements/*","calculatequantities");
+   // }
+
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(authz -> authz
+                        .requestMatchers(
+                                "/v3/api-docs/**",
+                                "/swagger-ui/**",
+                                "/swagger-ui/index.html",
+                                "/swagger-resources/**",
+                                "/webjars/**",
+                                "/localhost/**","/measurements/*","/api/v1/auth/**",
+                                "/sayHello","/h2-console/**","/**","/servicenumbers/**",
+                                "/iasusers", "/formulas/*", "/formulas", "/linetypes/*", "/linetypes", "/materialgroups/*", "/materialgroups", "/modelspecs", "/modelspecs/*",
+                "/modelspecdetails/*", "/modelspecdetails", "/personnelnumbers/*", "/personnelnumbers", "/servicenumbers/*", "/servicenumbers", "/servicetypes/*", "/servicetypes",
+                "/invoices/*", "/invoices", "/mainitems/*/*/*/*/*", "/mainitems/*/*", "/mainitems","/mainitems/*", "/subitems/*", "/subitems", "/currencies/*", "/currencies", "/salesorder", "/salesorder/*", "/salesorderitems", "/salesorderitems/*," ,
+                "/salesorderpricing", "/salesorderpricing/*", "/executionordersub", "/executionordersub/*", "/executionordermain/*/*", "/executionordermain/*/*/*", "/executionordermain", "/executionordermain/*","/salesordercloud", "/salesordercloud/*",
+                "/salesorderpostcloud", "/salesorderpostcloud/*", "/serviceinvoice/*/*/*/*/*", "/serviceinvoice/*/*", "/serviceinvoice", "/serviceinvoice/*", "/salesorderitemcloud/*", "/salesorderitemcloud",
+                "/salesorderitemscloud/*", "/salesorderitemscloud", "/salesorderpricingcloud/*/*", "/salesorderpricingcloud", "/salesquotationcloud", "/salesquotationcloud/*",
+                "/salesquotationpostcloud/*", "/salesquotationpostcloud", "/salesquotationitemcloud/*", "/salesquotationitemcloud", "/salesquotationitemscloud", "/salesquotationitemscloud/*",
+                "/salesquotationpricingcloud/*/*", "/salesquotationpricingcloud", "/debitmemocloud/*" , "/debitmemocloud", "/debitmemopostcloud/*", "/debitmemopostcloud",
+                "/debitmemoitemscloud", "/debitmemoitemscloud/*","/salesorderallpricingcloud", "/salesorderallpricingcloud/*", "/salesorderitempricingcloudpost/*/*",
+                "/salesquotationricingcloudpatch/*/*/*/*", "/productcloud", "/productdescriptioncloud", "/businesspartner", "/salesquotationitem/*/*",
+                "/salesorderitem/*/*", "/debitmemoitems/*/*", "/allproductscloud", "/quantities", "/total", "/totalheader", "/totalsrv", "/totalheadersrv",
+                "/fetchSalesOrderDetails", "/measurements", "/measurements/*","calculatequantities"
+                        ).permitAll())
+                .csrf(csrf -> csrf.disable())
+                .headers(headers -> headers.frameOptions(frameOptions -> frameOptions.sameOrigin()));
+        return http.build();
+    }
+}
