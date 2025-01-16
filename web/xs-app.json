@@ -1,9 +1,9 @@
 {
     "routes": [
       {
-        "source": "^/myapp/(.*)$",
+        "source": "^/btpsd/(.*)$",
         "target": "$1",
-        "destination": "myapp"
+        "destination": "btpsd"
       }
     ]
   }

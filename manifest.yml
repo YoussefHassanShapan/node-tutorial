@@ -17,10 +17,23 @@ applications:
     destinations: >
       [
         {
-          "name":"myapp",
+          "name":"btpsd",
           "url":"https://btpsd.cfapps.us10-001.hana.ondemand.com/",
           "forwardAuthToken": true
         }
       ]
   services:
   - nodeuaa
+
+- name: btpsd
+  instances: 1
+  memory: 1G
+  health-check-type: process
+  path: BTP-SD/target/BTP-SD-0.0.1-SNAPSHOT.jar
+  buildpacks:
+    - java_buildpack
+  env:
+    JBP_CONFIG_OPEN_JDK_JRE: '{jre: { version: 17.0.+ }}'
+  services:
+    - postgres
+    - nodeuaa
